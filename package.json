@@ -2,19 +2,36 @@
   "name": "agentbooks-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server/",
   "scripts": {
+    "build": "tsc",
+    "dev": "nodemon",
+    "inspect": "nodemon --inspect server/",
+    "start": "node .",
+    "lint": "eslint . --ignore-path .gitignore",
+    "lint:fix": "yarn lint --fix",
+    "lint:quiet": "yarn lint --quiet",
+    "prettier": "prettier \"**/*.@(ts|js|json|md)\"",
+    "prettier:check": "yarn prettier --check",
+    "prettier:write": "yarn prettier --write",
+    "type-check": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/vimoppa/agentbooks-backend.git"
-  },
-  "keywords": [],
-  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/vimoppa/agentbooks-backend/issues"
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "@typescript-eslint/eslint-plugin": "^5.58.0",
+    "@typescript-eslint/parser": "^5.58.0",
+    "eslint": "^8.38.0",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "nodemon": "^2.0.22",
+    "prettier": "^2.8.7",
+    "ts-node": "^10.9.1"
   },
-  "homepage": "https://github.com/vimoppa/agentbooks-backend#readme"
+  "dependencies": {
+    "@cloudnative/health-connect": "^2.1.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "helmet": "^6.1.5"
+  }
 }
