@@ -2,14 +2,16 @@ import express from 'express';
 import * as http from 'http';
 import os from 'os';
 
-import loaders from './loaders';
+import { expressLib } from './lib/express';
+import { router } from './routes';
 
 async function srv() {
   const host = os.hostname();
   const port = '3000';
 
   const app = express();
-  await loaders({ app });
+  await expressLib(app);
+  await router(app);
 
   const server = http.createServer(app);
 
