@@ -2,10 +2,13 @@ import express from 'express';
 import * as http from 'http';
 import os from 'os';
 
+import { db } from './lib/db';
 import { expressLib } from './lib/express';
 import { router } from './routes';
 
 async function srv() {
+  // establish connection with database and ping!.
+  await db.ping();
   const host = os.hostname();
   const port = '3000';
 
