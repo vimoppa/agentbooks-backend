@@ -1,0 +1,45 @@
+openapi: 3.0.3
+info:
+  title: agentbooks-backend
+  description: agentbooks-backend
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:3000'
+tags:
+  - name: accounts
+    description: user accounts
+
+paths:
+  /v1/accounts:
+    post:
+      tags:
+        - accounts
+      description: create an account
+      operationId: accounts_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+
+components:
+  schemas:
+    Account:
+      type: object
+      properties:
+        email:
+          type: string
+          example: test-user@agentbooks.com
+        password:
+          type: string
+          example: strong_password
+        username:
+          type: string
+          example: ElonMars
