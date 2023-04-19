@@ -1,10 +1,15 @@
 CREATE TABLE IF NOT EXISTS accounts
 (
-    id         INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-    email      VARCHAR(256)     NOT NULL,
-    username   VARCHAR(256),
-    created_at TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP        NULL     DEFAULT CURRENT_TIMESTAMP ON
+    id            INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+    email         VARCHAR(256)     NOT NULL,
+    username      VARCHAR(256),
+    first_name    VARCHAR(256),
+    last_name     VARCHAR(256),
+    confirmed     BOOLEAN                   DEFAULT false,
+    signature     VARCHAR(256)     NOT NULL,
+    password_hash VARCHAR(256)     NOT NULL,
+    created_at    TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at    TIMESTAMP        NULL     DEFAULT CURRENT_TIMESTAMP ON
         UPDATE CURRENT_TIMESTAMP,
 
     PRIMARY KEY (id),
