@@ -1,3 +1,4 @@
+import { genSaltSync, hashSync } from 'bcrypt';
 import { NextFunction, Request, Response } from 'express';
 
 import { Errors } from '../lib/errors';
@@ -18,7 +19,7 @@ export async function createAccount(req: Request, res: Response, next: NextFunct
   const request: Account = {
     email,
     username,
-    passwordHash: `bcrypt(${password})`,
+    passwordHash: hashSync(password, genSaltSync(10)),
   };
 
   const acc = await account.createAccount(request);
@@ -26,5 +27,9 @@ export async function createAccount(req: Request, res: Response, next: NextFunct
     return next(acc);
   }
 
-  return res.status(200).json(acc);
+  return res.status(200).json({
+    message: 'account created, confirmation token has been sent to your email',
+    data: acc,
+    _token: { access_token: '', refresh_token: '', ttl: 0 }, /// for development, no mailing system integrated.
+  });
 }

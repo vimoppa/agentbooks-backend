@@ -1,4 +1,4 @@
-// import * as crypto from 'crypto';
+import * as crypto from 'crypto';
 
 import { Database, db } from '../lib/db';
 import { DuplicateEntryError, Errors, InternalServerError } from '../lib/errors';
@@ -12,30 +12,19 @@ export class Accounts implements AccountsRepository {
   }
 
   async createAccount(account: Account): Promise<PublicAccount | Errors> {
-    // const signature = crypto.createHash('256')
-    //   .update(account.email + account.username)
-    //   .digest('hex');
+    const signature = crypto.createHash('SHA256')
+      .update(account.email + account.username)
+      .digest('hex');
 
-    // const paccount: AccountsDBFields = {
-    //   boards: null,
-    //   confirmed: false,
-    //   email: account.email,
-    //   organisations: null,
-    //   organisationsInvite: null,
-    //   signature,
-    //   passwordHash: account.passwordHash,
-    //   username: account.username,
-    //   //
-    //   // updatedAt: '',
-    //   // createAt: '',
-    //   // deletedAt: '',
-    // };
+    let publicAccount: PublicAccount;
 
-
-    const sql = 'INSERT INTO accounts (email, username, passwordHash) values (?, ?, ?)';
-
-    // const response = await this.db.query<Account>(sql, [account.email, account.username, account.passwordHash]);
-    const response = await this.db.transaction(sql, [account.email, account.username, account.passwordHash]);
+    const sql = 'INSERT INTO accounts (email, username, signature, password_hash) values (?, ?, ?, ?)';
+    const response = await this.db.transaction(sql, [account.email, account.username, signature, account.passwordHash], (connection) => {
+      connection.query('SELECT email, username, first_name, last_name, confirmed, created_at, updated_at FROM accounts WHERE email = ?', [account.email], (e, resuls) => {
+        if (e) throw e;
+        publicAccount = resuls[0];
+      });
+    });
     if (response instanceof Errors) {
       if (response instanceof DuplicateEntryError) {
         return new InternalServerError('already exists');
@@ -44,17 +33,10 @@ export class Accounts implements AccountsRepository {
       return new InternalServerError('something went wrong!');
     }
 
-    // const paccount: PublicAccount = {
-    //   boards: undefined,
-    //   confirmed: false,
-    //   email: "",
-    //   id: "",
-    //   organisations: undefined,
-    //   organisationsInvite: undefined,
-    //   username: ""
-    // };
-
-    return response as PublicAccount;
+    return {
+      ...publicAccount,
+      confirmed: Boolean(publicAccount.confirmed)
+    };
   }
 }
 
