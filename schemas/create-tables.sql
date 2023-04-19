@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS accounts
     id         INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     email      VARCHAR(256)     NOT NULL,
     username   VARCHAR(256),
-    created_at TIMESTAMP        NOT NULL DEFAULT CURRENT_TIME,
+    created_at TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP        NULL     DEFAULT CURRENT_TIMESTAMP ON
         UPDATE CURRENT_TIMESTAMP,
 
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS accounts_organisations
     organisation_id INT(10)                    NOT NULL,
     confirmed       BOOLEAN                    NOT NULL,
     role            ENUM ('manager', 'member') NOT NULL,
-    created_at      TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIME,
+    created_at      TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at      TIMESTAMP                  NULL     DEFAULT CURRENT_TIMESTAMP ON
         UPDATE CURRENT_TIMESTAMP,
 
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS cards
     board_id     INT(10) UNSIGNED NOT NULL,
     assigned_to  INT(10) UNSIGNED,
     reported_by  INT(10) UNSIGNED NOT NULL,
-    created_at   TIMESTAMP        NOT NULL DEFAULT CURRENT_TIME,
+    created_at   TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY (id),
     FOREIGN KEY (board_id)
