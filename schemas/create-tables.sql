@@ -13,7 +13,13 @@ CREATE TABLE IF NOT EXISTS accounts (
 CREATE TABLE IF NOT EXISTS accounts_organisations (
     account_id INT(10) NOT NULL,
     organisation_id INT(10) NOT NULL,
+    confirmed BOOLEAN NOT NULL,
 
+    role ENUM ('manager', 'member') NOT NULL,
+
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIME,
+    updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON
+        UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (account_id, organisation_id)
 );
 
