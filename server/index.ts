@@ -4,6 +4,7 @@ import os from 'os';
 
 import { db } from './lib/db';
 import { expressLib } from './lib/express';
+import { Logger } from './lib/logger';
 import { router } from './routes';
 
 async function srv() {
@@ -19,12 +20,12 @@ async function srv() {
   const server = http.createServer(app);
 
   server.on('error', (err: Error): void => {
-    console.error(err);
+    Logger.error(err);
     process.exit(1);
   });
 
   server.listen(port, (): void => {
-    console.log(`API listening at http://${host}:${port}`);
+    Logger.log(`API listening at http://${host}:${port}`);
   });
 }
 

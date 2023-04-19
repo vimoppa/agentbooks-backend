@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS organisations
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS accounts_access_boards
+CREATE TABLE IF NOT EXISTS accounts_boards
 (
     account_id INT(10) UNSIGNED         NOT NULL,
     board_id   INT(10) UNSIGNED         NOT NULL,
