@@ -1,16 +1,37 @@
 import { HealthChecker, HealthEndpoint } from '@cloudnative/health-connect';
 import { Router } from 'express';
 
-import { createAccount } from './controllers/accounts';
+import { createAccount, getAccounts } from './controllers/accounts';
+import { login } from './controllers/authentication/login';
+import { authenticate } from './lib/middlewares/authentications';
+import { errorHandler } from './lib/middlewares/error_handler';
 
 export function router(r: Router): Router {
   r.get('/health', HealthEndpoint(new HealthChecker()));
-
-  // accounts endpoints
+  r.post('/v1/authentication/login', login);
+  // r.post('/v1/authentication/confirm');
+  r.post('/v1/authentication/forgot-password/');
+  r.post('/v1/authentication/forgot-password/confirm/:token');
   r.post('/v1/accounts', createAccount);
 
+  /* Authenticated Routes */
+  r.use(authenticate);
+  r.get('/v1/accounts/:accountid', getAccounts);
+
+  r.post('/v1/organisations'); // create an organisation
+  // r.post('/v1/organisations/:organisationid/invites');
+  // r.post('/v1/organisations/:organisationid/joins');
+  r.post('/v1/organisations/:organisationid/boards');
+  // r.get('/v1/organisations/:organisationid/boards');
+  // r.post('/v1/organisations/:organisationid/boards/:boardid?include=cards');
+
+  // r.post('/v1/organisations/:organisationid/boards/:boardid/cards'); /// add cards
+  r.get('/v1/organisations/:organisationid/boards/:boardid/cards');  /// list cards
+  // r.get('/v1/organisations/:organisationid/boards/:boardid/cards/:cardid');
+  // r.put('/v1/organisations/:organisationid/boards/:boardid/cards/:cardid/transfers/boards/:boardid');
+
   // handle errors
-  r.use((err, req, res, next) => res.status(Number(err.code)).json({ error: err }));
+  r.use(errorHandler);
 
   return r;
 }

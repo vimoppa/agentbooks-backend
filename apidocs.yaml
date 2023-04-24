@@ -5,6 +5,8 @@ info:
   version: 1.0.0
 servers:
   - url: 'http://localhost:3000'
+security:
+  - Authorization: []
 tags:
   - name: accounts
     description: user accounts
@@ -20,18 +22,64 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Account'
+              $ref: '#/components/schemas/CreateAccountRequest'
       responses:
         '200':
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Account'
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'account created, confirmation code has been sent to your email'
+                  data:
+                    $ref: '#/components/schemas/Account'
+  /v1/authentication/login:
+    post:
+      tags:
+        - accounts
+      description: authenticate an account
+      operationId: authentication_login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthenticationLogin'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationToken'
+  /v1/accounts/{accountid}:
+    get:
+      tags:
+        - accounts
+      description: fetch account or accounts
+      operationId: get_accounts
+      security:
+        - Authorization: []
+      parameters:
+        - in: path
+          name: accountid
+          required: false
+          schema:
+            type: string
+            example: 11
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationToken'
 
 components:
   schemas:
-    Account:
+    CreateAccountRequest:
       type: object
       properties:
         email:
@@ -42,4 +90,45 @@ components:
           example: strong_password
         username:
           type: string
-          example: ElonMars
+          example: 'ElonMars'
+    AuthenticationLogin:
+      type: object
+      properties:
+        usernameOrEmail:
+          type: string
+          example: test-user@agentbooks.com
+        password:
+          type: string
+          example: strong_password
+    AuthenticationToken:
+      type: object
+      properties:
+        token:
+          $ref: '#/components/schemas/AuthenticationTokenMetadata'
+    AuthenticationTokenMetadata:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: access_token
+        refresh_token:
+          type: string
+          example: refresh_token
+        ttl:
+          type: number
+          example: 3600
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '11'
+        username:
+          type: string
+          example: 'ElonMars'
+
+  securitySchemes:
+    Authorization:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
