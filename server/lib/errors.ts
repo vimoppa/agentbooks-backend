@@ -7,7 +7,8 @@ export type ErrorType =
   | 'DatabaseConnection'
   | 'DatabaseOperation'
   | 'InternalServer'
-  | 'DuplicateEntry';
+  | 'DuplicateEntry'
+  | 'Unauthenticated';
 
 export enum STATUS_CODE {
   SUCCESS = 200,
@@ -74,5 +75,17 @@ export class InternalServerError extends Errors {
 export class DuplicateEntryError extends Errors {
   constructor(message: string) {
     super(STATUS_CODE.INTERNAL_SERVER_ERROR, 'DuplicateEntry', `${message}`);
+  }
+}
+
+export class BadRequest extends Errors {
+  constructor(message: string) {
+    super(STATUS_CODE.BAD_REQUEST, 'BadRequest', `${message}`);
+  }
+}
+
+export class Forbidden extends Errors {
+  constructor(message: string) {
+    super(STATUS_CODE.UNAUTHORIZED, 'Unauthenticated', `${message}`);
   }
 }
