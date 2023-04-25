@@ -1,11 +1,11 @@
 import { Errors } from '../lib/errors';
 
-interface OrganisationMetadata {
+export interface OrganisationMetadata {
   id: string;
   slug?: string;
 }
 
-interface BoardMetadata {
+export interface BoardMetadata {
   id: string;
   slug?: string;
 }
@@ -47,7 +47,40 @@ export interface AccountsRepository {
 
   generateAccessToken(id: string, signature: string): AccessToken;
 
-  findOneById(id: string): Promise<AccountsDBFields | Errors>
+  findOneById(id: string): Promise<AccountsDBFields | Errors>;
 
   // generateAndSendConfirmation(id: string, emailOrPhoneNumber: string, deliveryMethod?: string): Promise<void>;
+}
+
+export interface Organisation extends OrganisationMetadata {
+  Admins: Array<PublicAccount>;
+  Members: Array<PublicAccount>;
+
+  create_at: string;
+  updated_at: string;
+  deleted_at: string;
+}
+
+export interface OrganisationsRepository {
+  createOrganisation(accountId: string, organisationSlug: string): Promise<OrganisationMetadata | Errors>;
+
+  findOneById(id: string): Promise<Organisation | Errors>;
+
+  // organisationAndAccountAssociatedById(accountId: string, organisationId: string): Promise<AccountsOrganisations | Errors>;
+}
+
+export enum OrganisationRole {
+  Manager = 'manager', // Admin -> A
+  Member = 'member' // Member -> M
+}
+
+export interface AccountsOrganisations {
+  account_id: string;
+  organisation_id: string;
+  confirmed: boolean;
+  role: OrganisationRole;
+
+  created_at: string;
+  updated_at: string;
+  // deleted_at: string;
 }

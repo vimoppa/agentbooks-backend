@@ -6,16 +6,17 @@ info:
 servers:
   - url: 'http://localhost:3000'
 security:
-  - Authorization: []
+  - Authorization: [ ]
 tags:
-  - name: accounts
-    description: user accounts
+  - name: Account
+  - name: Authentication
+  - name: Organisation
 
 paths:
   /v1/accounts:
     post:
       tags:
-        - accounts
+        - Account
       description: create an account
       operationId: accounts_create
       requestBody:
@@ -39,14 +40,14 @@ paths:
   /v1/authentication/login:
     post:
       tags:
-        - accounts
+        - Authentication
       description: authenticate an account
       operationId: authentication_login
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AuthenticationLogin'
+              $ref: '#/components/schemas/AuthenticationLoginRequest'
       responses:
         '200':
           description: Success
@@ -57,11 +58,11 @@ paths:
   /v1/accounts/{accountid}:
     get:
       tags:
-        - accounts
+        - Account
       description: fetch account or accounts
       operationId: get_accounts
       security:
-        - Authorization: []
+        - Authorization: [ ]
       parameters:
         - in: path
           name: accountid
@@ -76,8 +77,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthenticationToken'
+  /v1/organisations:
+    post:
+      tags:
+        - Organisation
+      description: create an organisation
+      operationId: create_organisations
+      security:
+        - Authorization: [ ]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganisationRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organisation'
 
 components:
+  securitySchemes:
+    Authorization:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   schemas:
     CreateAccountRequest:
       type: object
@@ -91,7 +118,7 @@ components:
         username:
           type: string
           example: 'ElonMars'
-    AuthenticationLogin:
+    AuthenticationLoginRequest:
       type: object
       properties:
         usernameOrEmail:
@@ -126,9 +153,18 @@ components:
         username:
           type: string
           example: 'ElonMars'
-
-  securitySchemes:
-    Authorization:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+    CreateOrganisationRequest:
+      type: object
+      properties:
+        slug:
+          type: string
+          example: 'Art House'
+    Organisation:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '1'
+        slug:
+          type: string
+          example: 'Art House'

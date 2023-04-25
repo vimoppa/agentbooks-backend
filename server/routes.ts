@@ -3,6 +3,7 @@ import { Router } from 'express';
 
 import { createAccount, getAccounts } from './controllers/accounts';
 import { login } from './controllers/authentication/login';
+import { createOrganisations } from './controllers/organisations';
 import { authenticate } from './lib/middlewares/authentications';
 import { errorHandler } from './lib/middlewares/error_handler';
 
@@ -18,7 +19,7 @@ export function router(r: Router): Router {
   r.use(authenticate);
   r.get('/v1/accounts/:accountid', getAccounts);
 
-  r.post('/v1/organisations'); // create an organisation
+  r.post('/v1/organisations', createOrganisations);
   // r.post('/v1/organisations/:organisationid/invites');
   // r.post('/v1/organisations/:organisationid/joins');
   r.post('/v1/organisations/:organisationid/boards');
