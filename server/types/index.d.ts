@@ -1,4 +1,4 @@
-import { AccountsDBFields, Organisation } from './repositories';
+import { AccountsDBFields, BoardMetadata, Organisation } from './repositories';
 
 declare global {
   namespace Express {
@@ -7,6 +7,7 @@ declare global {
       isSysAdmin: boolean;
       authenticatedOrganisation: Organisation | undefined;
       isOrganisationAdmin: boolean;
+      authenticatedBoard: BoardMetadata | undefined;
     }
   }
 }

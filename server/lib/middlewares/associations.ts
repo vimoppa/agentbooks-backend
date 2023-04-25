@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 
+import { board } from '../../repository/boards';
 import { organisation } from '../../repository/organisations';
-import { OrganisationRole } from '../../types/repositories';
+import { BoardPermission, OrganisationRole } from '../../types/repositories';
 import { BadRequest, Errors, Forbidden } from '../errors';
 import { Logger } from '../logger';
 
@@ -20,7 +21,7 @@ export function organisationWithRole(role: OrganisationRole) {
     if (!org?.id) {
       return next(new BadRequest('organisation doesn\'t exist'));
     }
-    Logger.debug({organisationid, org});
+    Logger.debug({ organisationid, org });
 
     const accountId = String(req.authenticatedAccount.id);
 
@@ -40,6 +41,28 @@ export function organisationWithRole(role: OrganisationRole) {
     }
 
     req.authenticatedOrganisation = org;
+
+    return next();
+  };
+}
+
+export function boardWithRole(role: BoardPermission) {
+  return async function(req: Request, res: Response, next: NextFunction) {
+    const { boardid } = req.params;
+
+    req.authenticatedBoard = undefined;
+
+    const b = await board.findOneById(boardid);
+    if (b instanceof Errors) {
+      return next(b);
+    }
+
+    if (!b?.id) {
+      return next(new BadRequest('board doesn\'t exist'));
+    }
+    Logger.debug({ board: b });
+
+    req.authenticatedBoard = b;
 
     return next();
   };

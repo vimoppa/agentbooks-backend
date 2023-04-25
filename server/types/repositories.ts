@@ -52,6 +52,7 @@ export interface AccountsRepository {
   // generateAndSendConfirmation(id: string, emailOrPhoneNumber: string, deliveryMethod?: string): Promise<void>;
 }
 
+// TODO: change use of array to map: key -> account_id, value -> role
 export interface Organisation extends OrganisationMetadata {
   admins: Array<PublicAccount>;
   members: Array<PublicAccount>;
@@ -85,10 +86,44 @@ export interface AccountsOrganisations {
   // deleted_at: string;
 }
 
-export interface Board extends  BoardMetadata{
-  organisation_id: string
+export interface Board extends BoardMetadata {
+  organisation_id: string;
+}
+
+// TODO: make migration to change permission type
+export enum BoardPermission {
+  Owner = 'owner', // Owner -> RWD -> 3
+  Member = 'member', // Member -> RW -> 2
+}
+
+export interface AccountsBoards {
+  account_id: string;
+  board_id: string;
+  role: BoardPermission;
+}
+
+export interface Board extends BoardMetadata {
+  account_permission: Map<AccountsBoards['account_id'], BoardPermission>;
 }
 
 export interface BoardsRepository {
-  createBoard(organisationId: string, boardSlug: string): Promise<BoardMetadata | Errors>;
+  createBoard(organisationId: string, boardSlug: string, accountId: string): Promise<BoardMetadata | Errors>;
+
+  findOneById(id: string): Promise<BoardMetadata | Errors>;
+}
+
+export interface Card {
+  description: string;
+  board_id: string;
+  assigned_to?: string;
+  reported_by: string;
+}
+
+export interface CardDBFields extends Card {
+  id: string;
+  created_at: string;
+}
+
+export interface CardsRepository {
+  createCard(card: Card): Promise<CardDBFields | Errors>;
 }

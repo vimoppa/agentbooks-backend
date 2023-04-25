@@ -4,11 +4,12 @@ import { Router } from 'express';
 import { createAccount, getAccounts } from './controllers/accounts';
 import { login } from './controllers/authentication/login';
 import { createBoard } from './controllers/boards';
+import { createCard } from './controllers/cards';
 import { createOrganisations } from './controllers/organisations';
-import { organisationWithRole } from './lib/middlewares/associations';
+import { boardWithRole, organisationWithRole } from './lib/middlewares/associations';
 import { authenticate } from './lib/middlewares/authentications';
 import { errorHandler } from './lib/middlewares/error_handler';
-import { OrganisationRole } from './types/repositories';
+import { BoardPermission, OrganisationRole } from './types/repositories';
 
 export function router(r: Router): Router {
   r.get('/health', HealthEndpoint(new HealthChecker()));
@@ -29,8 +30,8 @@ export function router(r: Router): Router {
   r.post('/v1/organisations/:organisationid/boards', organisationWithRole(OrganisationRole.Manager), createBoard);
   // r.post('/v1/organisations/:organisationid/boards/:boardid?include=cards');
 
-  // r.post('/v1/organisations/:organisationid/boards/:boardid/cards'); /// add cards
-  r.get('/v1/organisations/:organisationid/boards/:boardid/cards');  /// list cards
+  r.post('/v1/organisations/:organisationid/boards/:boardid/cards', organisationWithRole(OrganisationRole.Manager), boardWithRole(BoardPermission.Owner), createCard); /// add cards
+  // r.get('/v1/organisations/:organisationid/boards/:boardid/cards');
   // r.get('/v1/organisations/:organisationid/boards/:boardid/cards/:cardid');
   // r.put('/v1/organisations/:organisationid/boards/:boardid/cards/:cardid/transfers/boards/:boardid');
 

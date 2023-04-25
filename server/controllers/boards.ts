@@ -9,8 +9,9 @@ export interface CreateBoardReq {
 
 export async function createBoard(req: Request, res: Response, next: NextFunction) {
   const { slug }: CreateBoardReq = req.body;
+  const accountid = String(req.authenticatedAccount.id);
 
-  const response = await board.createBoard(req.authenticatedOrganisation.id, slug);
+  const response = await board.createBoard(req.authenticatedOrganisation.id, slug, accountid);
   if (response instanceof Errors) {
     return next(response);
   }

@@ -1,7 +1,7 @@
 import { Database, db } from '../lib/db';
-import { Errors, InternalServerError } from '../lib/errors';
+import { BadRequest, Errors, InternalServerError } from '../lib/errors';
 import { Logger } from '../lib/logger';
-import { Board, BoardMetadata, BoardsRepository } from '../types/repositories';
+import { Board, BoardMetadata, BoardsRepository, Organisation, OrganisationRole } from '../types/repositories';
 
 export class Boards implements BoardsRepository {
   private readonly db: Database;
@@ -10,7 +10,7 @@ export class Boards implements BoardsRepository {
     this.db = db;
   }
 
-  async createBoard(organisationId: string, boardSlug: string): Promise<BoardMetadata | Errors> {
+  async createBoard(organisationId: string, boardSlug: string, accountId: string): Promise<BoardMetadata | Errors> {
     let b: Board;
     Logger.debug({ organisationId, boardSlug });
 
@@ -22,6 +22,9 @@ export class Boards implements BoardsRepository {
           (e, results) => {
             if (e) throw e;
             b = results[0];
+
+            const agSQL = 'INSERT INTO accounts_boards (board_id, account_id, permission)  VALUES (?, ?, ?)';
+            connection.query(agSQL, [b.id, accountId, OrganisationRole.Manager]);
           },
         );
       },
@@ -31,6 +34,20 @@ export class Boards implements BoardsRepository {
     }
 
     return b;
+  }
+
+  async findOneById(id: string): Promise<BoardMetadata | Errors> {
+    const sql = 'SELECT * FROM boards WHERE id = ?';
+    const response: Array<object> | Errors = await this.db.query(sql, [id]);
+    if (response instanceof Errors) {
+      return new InternalServerError(response.message);
+    }
+
+    if (!response && response.length <= 0) {
+      return new BadRequest('board with id doesn\'t exist');
+    }
+
+    return response[0] as BoardMetadata;
   }
 }
 
