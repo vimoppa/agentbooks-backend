@@ -3,19 +3,21 @@ import mysql from 'mysql';
 import { DatabaseConnectionError, DatabaseOperationError, DuplicateEntryError, Errors } from './errors';
 import { Logger } from './logger';
 
+const dbconfig: mysql.PoolConfig = {
+  connectionLimit: 1000,
+  host: 'localhost',
+  user: 'root',
+  password: 'root',
+  database: 'agentbooks',
+  insecureAuth: true,
+  // debug: true,
+};
+
 export class Database {
   private readonly _pool: mysql.Pool;
 
   constructor() {
-    this._pool = mysql.createPool({
-      connectionLimit: 1000,
-      host: 'localhost',
-      user: 'root',
-      password: 'root',
-      database: 'agentbooks',
-      insecureAuth: true,
-      // debug: true,
-    });
+    this._pool = mysql.createPool(dbconfig);
   }
 
   get pool() {
