@@ -6,7 +6,7 @@ import {
   OrganisationMetadata,
   OrganisationRole,
   OrganisationsRepository,
-} from '../types/accounts';
+} from '../types/repositories';
 
 export class Organisations implements OrganisationsRepository {
   private readonly db: Database;

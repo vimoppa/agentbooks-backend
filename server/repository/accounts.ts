@@ -9,7 +9,7 @@ import {
   AccountsDBFields,
   AccountsRepository,
   PublicAccount,
-} from '../types/accounts';
+} from '../types/repositories';
 
 export class Accounts implements AccountsRepository {
   private readonly db: Database;

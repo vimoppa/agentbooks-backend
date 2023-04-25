@@ -5,7 +5,7 @@ import { pick } from 'lodash';
 import { Errors, Forbidden, STATUS_CODE } from '../lib/errors';
 import { Logger } from '../lib/logger';
 import { account } from '../repository/accounts';
-import { Account } from '../types/accounts';
+import { Account } from '../types/repositories';
 
 // const expectedCreateAccountData = ['email', 'password'];
 
