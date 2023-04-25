@@ -16,8 +16,8 @@ export async function createOrganisations(req: Request, res: Response, next: Nex
     return next(org);
   }
 
-  return res.status(STATUS_CODE.SUCCESS).json({
-    message: `organisation '${slug}' created`,
+  return res.status(STATUS_CODE.CREATED).json({
+    message: 'Organisation created',
     data: org,
   });
 }

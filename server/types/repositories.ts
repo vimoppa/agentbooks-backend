@@ -53,8 +53,8 @@ export interface AccountsRepository {
 }
 
 export interface Organisation extends OrganisationMetadata {
-  Admins: Array<PublicAccount>;
-  Members: Array<PublicAccount>;
+  admins: Array<PublicAccount>;
+  members: Array<PublicAccount>;
 
   create_at: string;
   updated_at: string;
@@ -83,4 +83,12 @@ export interface AccountsOrganisations {
   created_at: string;
   updated_at: string;
   // deleted_at: string;
+}
+
+export interface Board extends  BoardMetadata{
+  organisation_id: string
+}
+
+export interface BoardsRepository {
+  createBoard(organisationId: string, boardSlug: string): Promise<BoardMetadata | Errors>;
 }

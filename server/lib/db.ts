@@ -74,7 +74,11 @@ export class Database {
     });
   }
 
-  async transaction<T extends object>(sql, values, fn?: (connection: mysql.PoolConnection) => void): Promise<T | Errors> {
+  async transaction<T extends object>(
+    sql,
+    values,
+    fn?: (connection: mysql.PoolConnection) => void,
+  ): Promise<T | Errors> {
     const connection = await this._connection();
     if (connection instanceof Error) {
       return new DatabaseConnectionError(connection.message);

@@ -11,6 +11,7 @@ tags:
   - name: Account
   - name: Authentication
   - name: Organisation
+  - name: Board
 
 paths:
   /v1/accounts:
@@ -66,7 +67,7 @@ paths:
       parameters:
         - in: path
           name: accountid
-          required: false
+          required: true
           schema:
             type: string
             example: 11
@@ -90,6 +91,33 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateOrganisationRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organisation'
+  /v1/organisations/{organisationid}/boards:
+    post:
+      tags:
+        - Board
+      description: create a board
+      operationId: create_board
+      security:
+        - Authorization: [ ]
+      parameters:
+        - in: path
+          name: organisationid
+          required: true
+          schema:
+            type: string
+            example: 11
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBoardRequest'
       responses:
         '200':
           description: Success
@@ -168,3 +196,24 @@ components:
         slug:
           type: string
           example: 'Art House'
+    CreateBoardRequest:
+      type: object
+      properties:
+        slug:
+          type: string
+          example: 'Art Board'
+    Board:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '1'
+        slug:
+          type: string
+          example: 'Art Board'
+        Admins:
+          type: object
+          example: { id: '11', username: 'Elon' }
+        Members:
+          type: object
+          example: { }

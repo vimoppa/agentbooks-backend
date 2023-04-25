@@ -1,11 +1,15 @@
+import { pick } from 'lodash';
+
 import { Database, db } from '../lib/db';
 import { BadRequest, Errors, InternalServerError } from '../lib/errors';
-import { Logger } from '../lib/logger';
 import {
+  AccountsDBFields,
+  AccountsOrganisations,
   Organisation,
   OrganisationMetadata,
   OrganisationRole,
   OrganisationsRepository,
+  PublicAccount,
 } from '../types/repositories';
 
 export class Organisations implements OrganisationsRepository {
@@ -43,7 +47,7 @@ export class Organisations implements OrganisationsRepository {
   }
 
   async findOneById(id: string): Promise<Organisation | Errors> {
-    const sql = `SELECT o.*, a.*, ao.role
+    const sql = `SELECT o.*, a.*, ao.role, ao.organisation_id
                  FROM organisations o
                           LEFT JOIN accounts_organisations ao ON o.id = ao.organisation_id
                           LEFT JOIN accounts a ON ao.account_id = a.id
@@ -53,12 +57,31 @@ export class Organisations implements OrganisationsRepository {
       return new InternalServerError(response.message);
     }
 
-    if (!response && !response.length) {
+    if (!response && response.length <= 0) {
       return new BadRequest('organisation with id doesn\'t exist');
     }
-    Logger.debug(response);
+    const oaa = response as Array<OrganisationMetadata & AccountsOrganisations & AccountsDBFields>;
 
-    return response[0] as Organisation;
+    const admins: Array<PublicAccount> = [];
+    const members: Array<PublicAccount> = [];
+
+    for (const i of oaa) {
+      const account: PublicAccount = pick(i, ['id', 'email', 'confirmed', 'username']);
+
+      if (i.role === OrganisationRole.Manager) {
+        admins.push(account);
+      }
+      if (i.role === OrganisationRole.Member) {
+        members.push(account);
+      }
+    }
+
+    return {
+      id: oaa[0].organisation_id,
+      slug: oaa[0].slug,
+      admins,
+      members,
+    } as Organisation;
   }
 
 }
