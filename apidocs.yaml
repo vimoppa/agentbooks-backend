@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
-  title: agentbooks-backend
-  description: agentbooks-backend
+  title: backend
+  description: backend
   version: 1.0.0
 servers:
   - url: 'http://localhost:3000'
@@ -139,7 +139,7 @@ components:
       properties:
         email:
           type: string
-          example: test-user@agentbooks.com
+          example: aio@arthouse.移动
         password:
           type: string
           example: strong_password
@@ -151,7 +151,7 @@ components:
       properties:
         usernameOrEmail:
           type: string
-          example: test-user@agentbooks.com
+          example: aio@arthouse.移动
         password:
           type: string
           example: strong_password
@@ -180,7 +180,7 @@ components:
           example: '11'
         username:
           type: string
-          example: 'ElonMars'
+          example: 'Elon'
     CreateOrganisationRequest:
       type: object
       properties:

@@ -1,6 +1,6 @@
-# AgentBooks Backend
+# Backend (WIP)
 
-### Local Development:
+_backend for arthouse.移动 (coming soon - maybe)_
 
 #### Requirements:
 

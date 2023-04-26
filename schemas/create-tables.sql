@@ -11,9 +11,11 @@ CREATE TABLE IF NOT EXISTS accounts
     created_at    TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at    TIMESTAMP        NULL     DEFAULT CURRENT_TIMESTAMP ON
         UPDATE CURRENT_TIMESTAMP,
+    deleted_at    TIMESTAMP                 DEFAULT NULL,
 
     PRIMARY KEY (id),
-    UNIQUE KEY (email, username)
+    UNIQUE KEY (email, username),
+    KEY idx_deleted_at (deleted_at)
 );
 
 CREATE TABLE IF NOT EXISTS accounts_organisations

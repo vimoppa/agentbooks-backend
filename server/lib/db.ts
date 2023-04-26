@@ -8,7 +8,7 @@ const dbconfig: mysql.PoolConfig = {
   host: 'localhost',
   user: 'root',
   password: 'root',
-  database: 'agentbooks',
+  database: 'arthouse.移动',
   insecureAuth: true,
   // debug: true,
 };
